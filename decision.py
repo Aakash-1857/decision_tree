@@ -100,7 +100,7 @@ st.sidebar.markdown("---")
 def load_data():
     try:
         # Try to load the CSV file
-        df = pd.read_csv("weatherAUS.csv")
+        raw_df = pd.read_csv("weatherAUS.csv")
         return df
     except FileNotFoundError:
         st.error("⚠️ weatherAUS.csv not found. Please upload the file to continue.")
