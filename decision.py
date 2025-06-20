@@ -763,7 +763,8 @@ if raw_df is not None:
                 
                 # Add red dot and vertical line at minimum
                 ax.scatter(best_leaf_nodes, best_val_error, color='red', s=100, zorder=5)
-                ax.axvline(best_leaf_nodes, color='red', linestyle='--', alpha=0.7)
+                ax.vlines(best_leaf_nodes, *ax.get_ylim(), color='red', linestyle='--', alpha=0.7)
+
                 
                 # Add annotation
                 ax.annotate(f'Min Val Error: {best_val_error:.4f}\n@ {best_leaf_nodes} leaves',
