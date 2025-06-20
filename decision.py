@@ -64,7 +64,7 @@ plt.rcParams['xtick.color'] = 'white'
 plt.rcParams['ytick.color'] = 'white'
 st.markdown(
     """
-    <a href="https://astonishing-kashata-793d1e.netlify.app/" target="_self" style="
+    <a href="https://astonishing-kashata-793d1e.netlify.app/" target="_blank" style="
         display: inline-block;
         padding: 0.75rem 1.5rem;
         background: linear-gradient(to right, #fde68a, #f59e0b);
@@ -85,6 +85,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 # Header
 st.title("🌧️ Rain Prediction Tree Visualizer")
