@@ -105,14 +105,14 @@ def load_data():
     except FileNotFoundError:
         st.error("⚠️ weatherAUS.csv not found. Please upload the file to continue.")
         return None
-
+"""
 # File uploader as fallback
 uploaded_file = st.sidebar.file_uploader("Upload weatherAUS.csv", type=['csv'])
 if uploaded_file is not None:
     raw_df = pd.read_csv(uploaded_file)
 else:
     raw_df = load_data()
-
+"""
 if raw_df is not None:
     st.success(f"✅ Data loaded successfully! Shape: {raw_df.shape}")
     
