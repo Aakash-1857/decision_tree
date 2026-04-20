@@ -1024,19 +1024,98 @@ if raw_df is not None:
         return model
     
     tree_model = train_model(max_depth, max_leaf_nodes, min_samples_split, min_samples_leaf)
+
+    # Live metrics
+    live_train = tree_model.score(train_inputs, train_targets)
+    live_val = tree_model.score(val_inputs, val_targets)
+    live_test = tree_model.score(test_inputs, test_targets)
     
-    # Model performance
-    train_score = tree_model.score(train_inputs, train_targets)
-    val_score = tree_model.score(val_inputs, val_targets)
-    test_score = tree_model.score(test_inputs, test_targets)
+    # ── LIVE TUNING BANNER ──────────────────────────────────────────
+    st.markdown("""
+    <div style="
+        background: linear-gradient(90deg, #0d3b6e, #1a6bb5);
+        border-left: 5px solid #00d4ff;
+        border-radius: 8px;
+        padding: 14px 20px;
+        margin-bottom: 20px;
+    ">
+        <span style="color:#00d4ff; font-size:1.1rem; font-weight:700;">
+            ⚡ LIVE TUNING LAB
+        </span>
+        <span style="color:#cce8ff; font-size:0.95rem; margin-left:12px;">
+            Adjust the sidebar sliders — this section updates in real time
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
     
+    # ── YOUR CUSTOM MODEL METRICS ────────────────────────────────────
+    st.markdown("#### 🎛️ Your Custom Model Performance")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("🟢 Training Accuracy", f"{train_score:.3f}", f"{train_score*100:.1f}%")
+        st.metric("🟢 Training Accuracy", f"{live_train:.4f}", f"{live_train*100:.1f}%")
     with col2:
-        st.metric("🟡 Validation Accuracy", f"{val_score:.3f}", f"{val_score*100:.1f}%")
+        st.metric("🟡 Validation Accuracy", f"{live_val:.4f}", f"{live_val*100:.1f}%")
     with col3:
-        st.metric("🔴 Test Accuracy", f"{test_score:.3f}", f"{test_score*100:.1f}%")
+        st.metric("🔴 Test Accuracy", f"{live_test:.4f}", f"{live_test*100:.1f}%")
+    
+    # ── LIVE COMPARISON TABLE ────────────────────────────────────────
+    st.markdown("#### 📊 Live Model Comparison")
+    st.caption("How does your tuned model stack up against the baseline and best model?")
+    
+    def delta_str(live, ref):
+        diff = (live - ref) * 100
+        arrow = "🟢 +" if diff > 0 else ("🔴 " if diff < 0 else "⚪ ")
+        return f"{arrow}{diff:+.2f}%"
+    
+    comparison_data = {
+        "Model": [
+            "📉 Baseline (depth=12)",
+            "🏆 Best Model (depth=7, leaves=120)",
+            "🎛️ Your Custom Model"
+        ],
+        "Params": [
+            "max_depth=12",
+            "max_depth=7, max_leaf_nodes=120",
+            f"depth={max_depth}, leaves={max_leaf_nodes}, min_split={min_samples_split}, min_leaf={min_samples_leaf}"
+        ],
+        "Train Acc": [
+            f"{train_accuracy:.4f}",
+            f"{opt_train_accuracy:.4f}",
+            f"{live_train:.4f}"
+        ],
+        "Val Acc": [
+            f"{val_accuracy:.4f}",
+            f"{opt_val_accuracy:.4f}",
+            f"{live_val:.4f}"
+        ],
+        "Test Acc": [
+            f"{test_accuracy:.4f}",
+            f"{opt_test_accuracy:.4f}",
+            f"{live_test:.4f}"
+        ],
+        "vs Best (Val)": [
+            delta_str(val_accuracy, opt_val_accuracy),
+            "✅ Reference",
+            delta_str(live_val, opt_val_accuracy)
+        ]
+    }
+    
+    st.dataframe(
+        pd.DataFrame(comparison_data),
+        use_container_width=True,
+        hide_index=True
+    )
+    
+    # Beat-the-best callout
+    if live_val > opt_val_accuracy:
+        st.success(f"🎉 Your model **beats the best model** on validation accuracy! ({live_val:.4f} vs {opt_val_accuracy:.4f})")
+    elif abs(live_val - opt_val_accuracy) < 0.002:
+        st.info(f"⚡ Your model is **within 0.2%** of the best model — very close!")
+    else:
+        gap = (opt_val_accuracy - live_val) * 100
+        st.warning(f"📉 Your model is {gap:.2f}% below the best model on validation. Keep tuning!")
+    
+
     
     # Feature importance
     st.subheader("🔍 Feature Importance Analysis")
