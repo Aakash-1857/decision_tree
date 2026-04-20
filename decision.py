@@ -62,29 +62,8 @@ plt.rcParams['axes.labelcolor'] = 'white'
 plt.rcParams['axes.edgecolor'] = 'white'
 plt.rcParams['xtick.color'] = 'white'
 plt.rcParams['ytick.color'] = 'white'
-st.markdown(
-    """
-    <a href="https://astonishing-kashata-793d1e.netlify.app/" target="_blank" style="
-        display: inline-block;
-        padding: 0.75rem 1.5rem;
-        background: linear-gradient(to right, #fde68a, #f59e0b);
-        color: black;
-        font-weight: 700;
-        font-size: 1rem;
-        text-decoration: none;
-        border-radius: 1rem;
-        box-shadow: 0 4px 15px rgba(234, 179, 8, 0.4);
-        transition: all 0.3s ease;
-        transform: scale(1);
-        margin: 1rem 0;
-    " 
-    onmouseover="this.style.transform='scale(1.07)'"
-    onmouseout="this.style.transform='scale(1)'">
-        Back to Portfolio
-    </a>
-    """,
-    unsafe_allow_html=True
-)
+
+
 
 
 # Header
@@ -93,8 +72,8 @@ st.markdown("### Explore, Train, and Visualize Decision Trees on Australian Weat
 
 
 # Sidebar
-st.sidebar.markdown("### Built by Kashi")
-st.sidebar.markdown("---")
+#st.sidebar.markdown("### Built by Kashi")
+#st.sidebar.markdown("---")
 
 # Section 2: Data Loading
 @st.cache_data
